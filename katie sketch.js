@@ -1,0 +1,77 @@
+function setup() {
+  // Create a canvas that fills the entire browser window
+  createCanvas(windowWidth, windowHeight);
+}
+
+function draw() {
+  // Set background to black
+  background(0);
+}
+let xs     = [100, 220, 340, 460, 560];
+let ys     = [140, 300, 180, 320, 150];
+let sizes  = [60, 90, 50, 110, 70];
+let colors = ['#FF69B4', '#FFB6C1', '#FF1493', '#F8A5C2', '#DB7093'];
+ 
+// ---------- FROM CLASS: animated growing rectangles ----------
+let growSize = 0;   // changes every frame
+let spacing = 40;   // how much bigger each rect is than the last
+ 
+function setup() {
+  createCanvas(640, 480);
+  rectMode(CENTER);
+}
+ 
+function draw() {
+  background('#FFE4EC'); // light pink background
+ 
+  // FROM CLASS: for loop builds rectangles that get larger each pass,
+  // and growSize makes them grow every frame, resetting past the edge
+  noFill();
+  strokeWeight(2);
+  stroke('#FF85B3');
+  for (let i = 0; i < 16; i++) {
+    let s = growSize + i * spacing;
+    rect(width / 2, height / 2, s, s);
+  }
+  growSize = growSize + 0.5;
+  if (growSize > spacing) {
+    growSize = 0; // reset so the pattern loops forever
+  }
+ 
+  // FROM CLASS: loop through the arrays and draw every shape
+  noStroke();
+  for (let i = 0; i < xs.length; i++) {
+    fill(colors[i]);
+    rect(xs[i], ys[i], sizes[i], sizes[i]);
+  }
+ 
+  // NEW: a white circle floating on each square, bobbing up and down
+  fill(255, 255, 255, 200);
+  for (let i = 0; i < xs.length; i++) {
+    let bob = sin(frameCount * 0.05 + i) * 10;
+    ellipse(xs[i], ys[i] + bob, sizes[i] * 0.4);
+  }
+ 
+  // NEW: while loop draws a border of dots, alternating two pinks
+  let x = 10;
+  let count = 0;
+  while (x < width) {
+    if (count % 2 == 0) {
+      fill('#FF1493');
+    } else {
+      fill('#FFC0CB');
+    }
+    ellipse(x, height - 12, 12);
+    x = x + 20;
+    count = count + 1;
+  }
+}
+ 
+// NEW: click anywhere to add a new pink square to the arrays
+function mousePressed() {
+  xs.push(mouseX);
+  ys.push(mouseY);
+  sizes.push(random(30, 100));
+  colors.push(random(colors));
+}
+ 
